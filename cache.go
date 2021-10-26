@@ -54,8 +54,7 @@ func (m *Cache) Delete(key string) {
 
 // checkTime function checks the lifetime of the data
 func (m *Cache) checkTime() {
-	for {
-		time.Sleep(time.Millisecond * 500)
+	for ; ; time.Sleep(time.Millisecond * 500) {
 		for k, v := range m.c {
 			if v.lifetime < time.Now().Unix() {
 				m.Delete(k)
