@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const TIMECHECK = 500 // time check ttl data in cache
+
 type data struct {
 	value    interface{}
 	lifetime int64
@@ -54,7 +56,7 @@ func (m *Cache) Delete(key string) {
 
 // checkTime function checks the lifetime of the data
 func (m *Cache) checkTime() {
-	for ; ; time.Sleep(time.Millisecond * 500) {
+	for ; ; time.Sleep(time.Millisecond * TIMECHECK) {
 		for k, v := range m.c {
 			if v.lifetime < time.Now().Unix() {
 				m.Delete(k)
