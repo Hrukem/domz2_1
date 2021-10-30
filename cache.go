@@ -11,9 +11,8 @@ type data struct {
 }
 
 type Cache struct {
-	mu  sync.Mutex
-	c   map[string]*data
-	ttl time.Duration
+	mu sync.Mutex
+	c  map[string]*data
 }
 
 // New function create new cache and start goroutine for check
