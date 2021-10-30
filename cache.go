@@ -5,23 +5,22 @@ import (
 	"time"
 )
 
-const TIMECHECK = 500 // time check ttl data in cache
-
 type data struct {
 	value    interface{}
 	lifetime int64
 }
 
 type Cache struct {
-	c  map[string]*data
-	mu sync.Mutex
+	mu  sync.Mutex
+	c   map[string]*data
+	ttl time.Duration
 }
 
 // New function create new cache and start goroutine for check
 // lifetime of the data
-func New() *Cache {
+func New(ttl time.Duration) *Cache {
 	res := &Cache{c: make(map[string]*data)}
-	go res.checkTime()
+	go res.checkTime(ttl)
 	return res
 }
 
@@ -55,8 +54,8 @@ func (m *Cache) Delete(key string) {
 }
 
 // checkTime function checks the lifetime of the data
-func (m *Cache) checkTime() {
-	ticker := time.NewTicker(time.Millisecond * TIMECHECK)
+func (m *Cache) checkTime(ttl time.Duration) {
+	ticker := time.NewTicker(time.Millisecond * ttl)
 	for {
 		<-ticker.C
 		m.check()
